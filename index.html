@@ -756,7 +756,7 @@ video::cue {
 // ═══════════════════════════════════════════════════════════════
 //  CONFIG — update GOOGLE_SCRIPT_URL after deploying Apps Script
 // ═══════════════════════════════════════════════════════════════
-const GOOGLE_SCRIPT_URL = https://script.google.com/macros/s/AKfycbxdD5ySrfBfvBYsfh-PXzdBVM4sMyvI9w2A0DCeyWOAKWqsxMQKrGdzHZEZKHvF-DUJ/exec;
+const GOOGLE_SCRIPT_URL = 'YOUR_GOOGLE_APPS_SCRIPT_URL_HERE';
 
 // ═══════════════════════════════════════════════════════════════
 //  50 PHILOSOPHICAL CAPTCHAS
@@ -871,22 +871,12 @@ const CAPTCHAS = [
 //  PAGE NAVIGATION
 // ═══════════════════════════════════════════════════════════════
 function showPage(id) {
-  const current = document.querySelector('.page.active');
-  const target  = document.getElementById('page-' + id);
-  if (!target || target === current) return;
-
-  if (current) {
-    current.classList.add('exiting');
-    current.addEventListener('animationend', () => {
-      current.classList.remove('active', 'exiting');
-    }, { once: true });
-  }
-  setTimeout(() => {
-    target.classList.add('active');
-    window.scrollTo(0, 0);
-  }, 200);
-
-
+  const target = document.getElementById('page-' + id);
+  if (!target) return;
+  // Remove active from all pages immediately — no animationend dependency
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active', 'exiting'));
+  target.classList.add('active');
+  window.scrollTo(0, 0);
 }
 
 function startExperience() {
