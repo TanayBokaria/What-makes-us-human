@@ -1062,7 +1062,10 @@ function _stopRecording() {
 async function saveRecording() {
   if (!_recBlob) return;
   const ext = _recBlob.type.includes('mp4') ? 'mp4' : 'webm';
-  const ts  = new Date().toISOString().replace(/[:.]/g, '-').replace('T', '_').slice(0, -5);
+  // IST = UTC + 5h30m (Chennai / Kolkata)
+  const _utc = new Date();
+  const _ist = new Date(_utc.getTime() + (5 * 60 + 30) * 60 * 1000);
+  const ts   = _ist.toISOString().replace('T', '_').replace(/\.\d{3}Z$/, '').replace(/:/g, '-');
   const filename = ts + '.' + ext;
 
   document.getElementById('voice-saving').textContent = 'Saving your response...';
