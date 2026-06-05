@@ -159,6 +159,7 @@ html, body {
   padding: 16px;
   justify-content: flex-start;
   gap: 0;
+  overflow-y: auto;
 }
 .captcha-card {
   background: var(--white);
@@ -529,9 +530,8 @@ video::cue {
   width: 130px;
   height: 130px;
   border-radius: 50%;
-  border: none;
-  background: rgba(255,255,255,0.08);
   border: 2px solid rgba(255,255,255,0.15);
+  background: rgba(255,255,255,0.08);
   color: var(--white);
   font-size: 2.8rem;
   cursor: pointer;
@@ -750,13 +750,12 @@ video::cue {
   </div>
 </div>
 
-<!-- YouTube IFrame API -->
 
 <script>
 // ═══════════════════════════════════════════════════════════════
 //  CONFIG — update GOOGLE_SCRIPT_URL after deploying Apps Script
 // ═══════════════════════════════════════════════════════════════
-const GOOGLE_SCRIPT_URL = https://script.google.com/macros/s/AKfycbyAAN1rB6A1ignOSc1fFATcrSNVZ11BscwlnLnKhtscZMAcTMeA-WQBE9mwbwMgkD0/exec;
+const GOOGLE_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbyAAN1rB6A1ignOSc1fFATcrSNVZ11BscwlnLnKhtscZMAcTMeA-WQBE9mwbwMgkD0/exec';
 
 // ═══════════════════════════════════════════════════════════════
 //  50 PHILOSOPHICAL CAPTCHAS
@@ -873,8 +872,8 @@ const CAPTCHAS = [
 function showPage(id) {
   const target = document.getElementById('page-' + id);
   if (!target) return;
-  // Remove active from all pages immediately — no animationend dependency
   document.querySelectorAll('.page').forEach(p => p.classList.remove('active', 'exiting'));
+  void target.offsetWidth; // force reflow — guarantees pageIn animation restarts
   target.classList.add('active');
   window.scrollTo(0, 0);
 }
@@ -967,7 +966,7 @@ function _vid() { return document.getElementById('main-video'); }
 
 function vcToggle() {
   const v = _vid();
-  v.paused ? v.play() : v.pause();
+  if (v.paused) v.play().catch(() => {}); else v.pause();
 }
 function vcRewind() {
   const v = _vid();
@@ -983,7 +982,7 @@ function vcVol(val) {
 function vcRewatch() {
   const v = _vid();
   v.currentTime = 0;
-  v.play();
+  v.play().catch(() => {});
 }
 function vcToggleCC() {
   const v = _vid();
