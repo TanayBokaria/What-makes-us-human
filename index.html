@@ -872,6 +872,7 @@ const CAPTCHAS = [
 function showPage(id) {
   const target = document.getElementById('page-' + id);
   if (!target) return;
+  document.querySelectorAll('video').forEach(v => { v.pause(); });
   document.querySelectorAll('.page').forEach(p => p.classList.remove('active', 'exiting'));
   void target.offsetWidth; // force reflow — guarantees pageIn animation restarts
   target.classList.add('active');
